@@ -1,0 +1,12 @@
+# Lines which start with # should be ignored
+# Since they will serve us comments
+- What is your name darling?
+- Have you slept well today?
+  * yes
+  * no
+- Rate from 1 (hate it) to 5 (love it) how much you like to press buttons?
+  * 1
+  * 2
+  * 3
+  * 4
+  * 5

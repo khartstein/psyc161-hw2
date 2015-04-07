@@ -1,0 +1,9 @@
+- What is your name darling?
+  * Billy Gates Junior
+  * response_time: 4.
+- Have you slept well today?
+  * no
+  * response_time: 2.2
+- Rate from 1 (hate it) to 5 (love it) how much you like to press buttons?
+  * 5
+  * response_time: 2
