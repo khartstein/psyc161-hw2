@@ -6,7 +6,7 @@ import os
 from os.path import exists
 import time
 
-os.chdir('/Users/Kevin/psyc161-hw2/questionnaires/')
+os.chdir('/Users/Kevin/Documents/psyc161-hw2/questionnaires/')
 
 # NOTE: API (what functions are named, their arguments and return values) is
 #       only suggestive.
