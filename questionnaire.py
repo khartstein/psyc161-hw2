@@ -18,7 +18,8 @@ def read_questions(input_file):
     """Reads questions and answer choices from the input_file
     """
     # Questions will be a list where each item consists of a list where first
-    # element is the question, and the 2nd through nth elements are available choices.
+    # element is the question, and the 2nd through nth elements are available
+    # choices.
     questions = []
     qList = []
     with open(input_file) as f:
@@ -28,7 +29,7 @@ def read_questions(input_file):
                 continue
             elif line[0] == '-':
                 # this line of the questionnaire is a question
-                if qList != []:
+                if not qList == []:
                     questions.append(qList)
                 qList = []
                 newquestion = line.lstrip('- ')
@@ -42,11 +43,12 @@ def read_questions(input_file):
             else:
                 print 'Questionnaire is not properly formatted!'
                 raise SystemExit(1)
-    if qList != []: questions.append(qList)
+    if not qList == []:
+        questions.append(qList)
     return questions
 
 
-def present_questions(questions, testing = False):
+def present_questions(questions, testing=False):
     """Presents each question in list and records answer/response time
     """
     answers, timings = [], []
@@ -59,8 +61,8 @@ def present_questions(questions, testing = False):
                 answer = question[1]
         else:
             answer = raw_input(question[0])
-        if not len(question) == 1:
-            while not answer in question[1:]:
+        if len(question) != 1:
+            while answer not in question[1:]:
                 print 'That is not an appropriate answer!'
                 print 'available answers are',
                 print question[1:]
@@ -72,14 +74,16 @@ def present_questions(questions, testing = False):
 
 
 def write_answers(output_file, questions, answers, timings):
-    """For each question, write question and participant's answer to  an output file. Formatting
-    is the same as for the input questionnaire (i.e. lines beginning with '- " are questions, lines
-    beginning with '  *' are answers (or response time).
+    """For each question, write question and participant's answer
+    to  an output file. Formatting is the same as for the input
+    questionnaire (i.e. lines beginning with '- " are questions, lines
+    beginning with '  *' are answers (or response time)).
     """
     with open(output_file, 'w') as f:
         qNum = 0
         for question in questions:
-            str2write = '- {}\n  * {}\n  * response time: {}\n'.format(question[0], answers[qNum], timings[qNum])
+            str2write = '- {}\n  * {}\n  * response time: {}\n'\
+                .format(question[0], answers[qNum], timings[qNum])
             f.write(str2write)
             qNum += 1
     f.close()
@@ -92,7 +96,7 @@ def parse_options(argv):
     mainDocString = main.__doc__
 
     # Define command line options we know
-    parser = argparse.ArgumentParser(description =  mainDocString)
+    parser = argparse.ArgumentParser(description=mainDocString)
     parser.add_argument('input_file',
                         help='Input file containing questionnaire')
     parser.add_argument('-o', '--output_file',
@@ -104,7 +108,7 @@ def parse_options(argv):
 
 # We moved out this functionality into a separate function, so we could
 # automatically test its correct function
-def main(argv, testing = False):
+def main(argv, testing=False):
     """Simple program to run a questionnaire and collect answers/RTs
     """
     args = parse_options(argv)
@@ -129,27 +133,41 @@ def main(argv, testing = False):
 #
 from nose.tools import assert_equal, assert_raises
 
+
 def test_read_questions():
-    """ Tests read_questions function to make sure that the provided questionnaire (sample1.txt)
-    returns the appropriate list of questions
+    """ Tests read_questions function to make sure that the provided
+    questionnaire (sample1.txt) returns the appropriate list of questions
     """
-    assert_equal(read_questions('sample1.txt'), [['What is your name darling?'], ['Have you slept well today?', 'yes', 'no'],
-    ['Rate from 1 (hate it) to 5 (love it) how much you like to press buttons?', '1', '2', '3', '4', '5']])
+    assert_equal(read_questions('sample1.txt'),
+                 [['What is your name darling?'],
+                 ['Have you slept well today?', 'yes', 'no'],
+                 ['Rate from 1 (hate it) to 5 (love it) how much you like to '
+                  'press buttons?', '1', '2', '3', '4', '5']])
 
 
 def test_present_questions():
     """Tests present_questions function to make sure it's working
     """
-    (ans, times) = present_questions(questions, testing = True)
-    # answers should match defaults when keyword argument 'testing' is set to True
+    (ans, times) = present_questions([['What is your name darling?'],
+                                     ['Have you slept well today?',
+                                     'yes', 'no'],
+                                      ['Rate from 1 (hate it) to 5 '
+                                      '(love it) how '
+                                       'much you like to press buttons?',
+                                       '1', '2', '3', '4', '5']],
+                                     testing=True)
+    # answers should match defaults when keyword argument 'testing'
+    # is set to True
     assert_equal(ans, ['Billy Gates Junior', 'yes', '1'])
-    # Since responses are provided automatically, all response times should be less than 0.1 seconds
+    # Since responses are provided automatically, all response times
+    # should be less than 0.1 seconds
     assert_equal(times[0:] < [0.1]*3, True)
 
 
 def test_parse_options():
-    """ Tests the parse_options function to make sure that it raises a TypeError when integers are provided
-    as arguments instead of strings containing appropriate file names.
+    """ Tests the parse_options function to make sure that it raises
+    a TypeError when integers are provided as arguments instead of
+    strings containing appropriate file names.
     """
     assert_raises(TypeError, parse_options, 'sample1.txt', 1)
     assert_raises(TypeError, parse_options, 1, 'output.txt')
@@ -158,11 +176,14 @@ def test_parse_options():
 def test_main():
     """Tests main function to see if it fails anywhere.
     """
-    # Just run it and see it not fail -- we return nothing.  It is a "smoke test"
-    assert_equal(main(['questionnaire.py','-o', 'OUTPUT_test.txt', 'sample1.txt'], testing = True),
+    # Just run it and see it not fail -- we return nothing.  It is a
+    # "smoke test"
+    assert_equal(main(['questionnaire.py', '-o', 'NOSETEST_OUTPUT.txt',
+                       'sample1.txt'], testing=True),
                  None)
     # Make sure we get a ValueError when output file is not specified
-    assert_raises(ValueError, main, ['questionnaire.py', 'sample1.txt'], testing = True)
+    assert_raises(ValueError, main, ['questionnaire.py', 'sample1.txt'],
+                  testing=True)
 
 
 if __name__ == '__main__':
